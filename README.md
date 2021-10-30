@@ -1,0 +1,2 @@
+# drf_react
+CRUD APP DJANGO REST FRAMEWORK &amp; REACT JS
