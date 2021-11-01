@@ -3,10 +3,10 @@ import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import axios from '../axios'
 
-
-function Login() {
+function Register() {
     const initialFormData = Object.freeze({
         email: "",
+        username: "",
         password: ""
     });
     const [formData, setFormData] = useState(initialFormData);
@@ -25,15 +25,14 @@ function Login() {
         e.preventDefault();
         console.log(formData);
         try {
-            const response = await axios.post("token/", {
+            const response = await axios.post("user/register/", {
             email: formData.email,
+            user_name: formData.username,
             password: formData.password
         });
-            localStorage.setItem("access_token", response.data.access)
-            localStorage.setItem("refresh_token", response.data.refresh)
-            axios.defaults.headers['Authorization'] = 
-                'JWT ' + localStorage.getItem('access_token');
-            history.push("/");
+            history.push("/login");
+            console.log(response.data);
+            console.log("User has been created successfully, You can now login");
         } catch (error) { 
             console.log("something went wrong");
         }
@@ -45,7 +44,7 @@ function Login() {
             <Wrapper>
                 <form noValidate>
                     <div className="form-title title">
-                        <h3>Sign In</h3>
+                        <h3>Sign up</h3>
                         <div className="underline"></div>
                     </div>
                     <div className="form-control">
@@ -57,6 +56,18 @@ function Login() {
                          id="email"
                          name="email"
                          autoComplete="email"
+                         onChange={handleChange}
+                         required
+                        />
+                    </div>
+                    <div className="form-control">
+                        <label htmlFor="username">
+                            <h4>Username: </h4>
+                        </label>
+                        <input type="test"
+                         className="form-input"
+                         name="username"
+                         autoComplete="username"
                          onChange={handleChange}
                          required
                         />
@@ -75,7 +86,7 @@ function Login() {
                         />
                     </div>
                     <button className="btn" type="submit" onClick={handleSubmit}>
-                         Login
+                         Sign Up
                     </button>
                 </form>
             </Wrapper>
@@ -129,4 +140,4 @@ const Wrapper = styled.div`
     }
 `
 
-export default Login
+export default Register

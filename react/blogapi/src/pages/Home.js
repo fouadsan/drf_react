@@ -1,46 +1,52 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import axios from 'axios'
-import { posts_url as url } from '../utils/constants'
+import axios from '../axios'
 import { PostList } from '../components'
 
 function Home() {
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(false);
+    const [error, setError] = useState(
+        {
+            "isError": false,
+            "msg": "",
+        }
+    );
     const [posts, setPosts] = useState([]);
 
-    const fetchPosts = async (url) => {
+    const fetchPosts = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.get(url)
+            const response = await axios.get()
             const data = response.data
+            console.log(data);
             if (data.length > 0) {
                 setPosts(response.data);
-                setError(false);
+                console.log(posts);
+                setError({...error, isError: false});
             } else {
-                setError(true);
+                setError({isError: false, msg: "No Data Found"});
             }
             
         } catch (error) {
-            setError(true);
+            setError({isError: true, msg: "something went wrong"});
             console.log("something went wrong");
         }
         setIsLoading(false);
     }
 
     useEffect(() => {
-        fetchPosts(url);
-    },[])
+        fetchPosts();
+    }, [])
 
     if (isLoading) {
         return <div className="loading"></div>
     }
 
-    if (error) {
+    if (error.isError) {
         return (
             <main className="page-100">
                 <div className="section section-center">
-                    <h3 className="text-center">Error...</h3>
+                    <h3 className="text-center">{error.msg}</h3>
                 </div>
             </main>
         )

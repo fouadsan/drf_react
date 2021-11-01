@@ -12,10 +12,10 @@ function PostList({posts}) {
                         <CustomLink to={`posts/${id}`} >
                             {
                                 title.length <= 15 ?
-                                <h4 className="text-center">{title}</h4> :
-                                <h4 className="text-center">
+                                <h5 className="text-center">{title}</h5> :
+                                <h5 className="text-center">
                                     {title.substr(0, 15)}...
-                                </h4>
+                                </h5>
                             }
                         </CustomLink>
                         {
@@ -52,6 +52,9 @@ const PostCard = styled.div`
     p {
         padding: 1rem;
     }
+    h5 {
+        color: var(--clr-grey-1);
+    }
     span {
         width: 100%;
         padding: 0.2rem 1rem;
@@ -74,7 +77,7 @@ const CustomLink = styled(Link)`
         color: var(--clr-grey-1);
     }
     &:hover {
-        h4 {
+        h5 {
             color: red;
         }
         

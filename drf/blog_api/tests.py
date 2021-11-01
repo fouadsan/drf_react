@@ -14,7 +14,7 @@ class PostTests(APITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def create_post(self):
+    def test_create_post(self):
         self.test_category = Category.objects.create(name="django")
         self.test_user1 = User.objects.create(
             username="test_user1", password="123456789"
@@ -28,7 +28,6 @@ class PostTests(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        
     def test_post_update(self):
 
         client = APIClient()
@@ -37,10 +36,12 @@ class PostTests(APITestCase):
         self.test_user1 = User.objects.create(
             username="test_user1", password="123456789"
         )
+
         self.test_user2 = User.objects.create(
             username="test_user2", password="123456789"
         )
-        self.test_post = Post.objects.create (
+
+        self.test_post = Post.objects.create(
             category_id=1, title="Post Title", author_id=1, excerpt="Post Excerpt",
             content="Post Content"
         )
