@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
+import { Search } from '.'
 
 function Header() {
     return (
@@ -12,6 +13,7 @@ function Header() {
                 <CustomLink to="/about" activeClassName="selected">
                     <span>ABOUT</span>
                 </CustomLink>
+                <Search />
             </NavMenu>
             <CustomLink to="/register" activeClassName="selected">
                 <span>REGISTER</span>
