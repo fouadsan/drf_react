@@ -5,3 +5,6 @@ pip install coverage
 coverage run --omit='*/env/*' manage.py test
 coverage html
 pip install djangorestframework
+pip install pyyaml
+pip install uritemplate
+pip install coreapi

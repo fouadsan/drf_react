@@ -6,10 +6,10 @@ function PostList({posts}) {
     return (
         <Wrapper>
             {posts.map((post) => {
-                const {id, title, excerpt, status} = post
+                const {id, title, excerpt, slug, status} = post
                 return (
                     <PostCard key={id}>
-                        <CustomLink to={`posts/${id}`} >
+                        <CustomLink to={`posts/${slug}`} >
                             {
                                 title.length <= 15 ?
                                 <h5 className="text-center">{title}</h5> :

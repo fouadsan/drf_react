@@ -1,4 +1,6 @@
-from rest_framework import generics
+from django.db.models import query
+from rest_framework import generics, serializers
+from rest_framework.decorators import permission_classes
 from blog.models import Post
 from .serializers import PostSerializer
 from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAdminUser, \
@@ -18,18 +20,31 @@ class PostUserWritePermission(BasePermission):
         return obj.author == request.user
 
 
-class PostList(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]
-    queryset = Post.post_objects.all()
+class PostList(viewsets.ModelViewSet):
+    permission_classes = [PostUserWritePermission]
 
-    def list(self, request):
-        serializer_class = PostSerializer(self.queryset, many=True)
-        return Response(serializer_class.data)
+    serializer_class = PostSerializer
 
-    def retrieve(self, request, pk=None):
-        post = get_object_or_404(self.queryset, pk=pk)
-        serializer_class = PostSerializer(post)
-        return Response(serializer_class.data)
+    def get_object(self, queryset=None, **kwargs):
+        item = self.kwargs.get('pk')
+        return get_object_or_404(Post, slug=item)
+
+    # Define custom Queryset
+    def get_queryset(self):
+        return Post.objects.all()
+
+# class PostList(viewsets.ViewSet):
+#     permission_classes = [IsAuthenticated]
+#     queryset = Post.post_objects.all()
+
+#     def list(self, request):
+#         serializer_class = PostSerializer(self.queryset, many=True)
+#         return Response(serializer_class.data)
+
+#     def retrieve(self, request, pk=None):
+#         post = get_object_or_404(self.queryset, pk=pk)
+#         serializer_class = PostSerializer(post)
+#         return Response(serializer_class.data)
 
     # def list(self, request):
     #     pass

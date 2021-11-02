@@ -22,9 +22,9 @@ function Home() {
             if (data.length > 0) {
                 setPosts(response.data);
                 console.log(posts);
-                setError({...error, isError: false});
+                setError({isError: false, msg: ""});
             } else {
-                setError({isError: false, msg: "No Data Found"});
+                setError({isError: true, msg: "No Data Found"});
             }
             
         } catch (error) {

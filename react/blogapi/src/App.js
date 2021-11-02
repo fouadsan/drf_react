@@ -23,7 +23,7 @@ function App() {
           <Route exact path="/logout">
             <Logout />
           </Route>
-          <Route exact path="/posts/:id" children={<SinglePost />}
+          <Route exact path="/posts/:slug" children={<SinglePost />}
           />
           <Route path="*">
             <Error />
