@@ -1,13 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useGlobalContext } from '../context'
 import { PostList } from '../components'
 
 function Home() {
-    const {isLoading, error} = useGlobalContext();
+    const {isLoading, error, fetchPosts, user} = useGlobalContext();
     
+    useEffect(() => {
+        fetchPosts();
+    }, [fetchPosts, user])
+
     if (isLoading) {
-        return <div className="loading"></div>
+        <main className="page-100">
+            <div className="loading"></div>
+        </main>
     }
 
     if (error.isError) {

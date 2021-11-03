@@ -4,6 +4,7 @@ import SinglePost from './SinglePost'
 import Login from './Login'
 import Register from './Register'
 import Error from './Error'
+import Admin from './Admin'
 
 export {
     Home,
@@ -11,5 +12,6 @@ export {
     SinglePost,
     Login,
     Register,
+    Admin,
     Error
 }

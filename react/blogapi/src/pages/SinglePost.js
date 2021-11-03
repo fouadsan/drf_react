@@ -1,29 +1,15 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
-import axios from '../axios'
 import { useParams } from 'react-router-dom'
+import { useGlobalContext } from '../context'
 
 function SinglePost() {
-    const [isLoading, setIsLoading] = useState(false);
-    const [singlePost, setSinglePost] = useState(null);
+    const {isLoading, singlePost, fetchSinglePost} = useGlobalContext();
 
     const {slug} = useParams();
-
-    const fetchSinglePost = async () => {
-        setIsLoading(true)
-        try {
-            const response = await axios.get(slug)
-            const data = response.data
-            console.log(data);
-            setSinglePost(response.data);
-        } catch (error) {
-            throw error;
-        }
-        setIsLoading(false);
-    }
     
     useEffect(() => {
-        fetchSinglePost();
+        fetchSinglePost(slug);
     }, [slug])
 
     if (isLoading) {
@@ -45,7 +31,7 @@ function SinglePost() {
         )
     }
 
-    const {title, excerpt, content} = singlePost
+    const {title, excerpt, content} = singlePost[0]
     return (
         <main className="page-100">
            <div className="form-title title">

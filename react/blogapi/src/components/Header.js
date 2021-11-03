@@ -1,9 +1,11 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
-import { Search } from '.'
+import { Search, NavAuthBtns } from '.'
+import { useGlobalContext } from '../context'
 
 function Header() {
+    const {user} = useGlobalContext();
     return (
         <NavContainer>
             <NavMenu>
@@ -13,17 +15,8 @@ function Header() {
                 <CustomLink to="/about" activeClassName="selected">
                     <span>ABOUT</span>
                 </CustomLink>
-              
             </NavMenu>
-            <CustomLink to="/register" activeClassName="selected">
-                <span>REGISTER</span>
-            </CustomLink>
-            <CustomLink to="/login" activeClassName="selected">
-                <span>LOGIN</span>
-            </CustomLink>
-            <CustomLink to="/logout">
-                <span>LOGOUT</span>
-            </CustomLink>
+            <NavAuthBtns isLogin={user.isLogin} />
         </NavContainer>
     )
 }
@@ -44,7 +37,7 @@ const NavMenu = styled.div`
     align-items: center;
 `
 
-const CustomLink = styled(NavLink)`
+export const CustomLink = styled(NavLink)`
     display: flex;
     align-items: center;
     padding: 0 12px;

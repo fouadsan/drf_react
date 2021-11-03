@@ -1,5 +1,6 @@
 from django.db.models import query
 from rest_framework import generics, serializers
+from rest_framework import permissions
 from rest_framework.decorators import permission_classes
 from blog.models import Post
 from .serializers import PostSerializer
@@ -11,42 +12,21 @@ from django.shortcuts import get_object_or_404
 from rest_framework import filters
 
 
-class PostUserWritePermission(BasePermission):
-    message = "Editing posts is restricted to the author only"
-
-    def has_object_permission(self, request, view, obj):
-        if request.method in SAFE_METHODS:
-            return True
-
-        return obj.author == request.user
-
-
 class PostList(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+
+class PostDetail(generics.RetrieveAPIView):
+
     serializer_class = PostSerializer
 
-    def get_queryset(self):
-        user = self.request.user
-        return Post.objects.filter(author=user)
+    def get_object(self, queryset=None, **kwargs):
+        item = self.kwargs.get('pk')
+        return get_object_or_404(Post, slug=item)
 
-
-class PostDetail(generics.ListAPIView):
-    serializer_class = PostSerializer
-
-    def get_queryset(self):
-        slug = self.request.query_params.get('slug', None)
-        return Post.objects.filter(slug=slug)
     
-
-    # def get_queryset(self):     
-    #     """
-    #     Filtering against URL (id)
-    #     get post base on title / string or id/integet
-    #     """
-    #     id = self.kwargs['pk']
-    #     print(id)
-    #     return Post.objects.filter(id=id)
-    
+# Post Search
 class PostListDetailFilter(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -58,3 +38,26 @@ class PostListDetailFilter(generics.ListAPIView):
     # '@' Full-text search. (Currently only supported Django's PostgreSQL backend.)
     # '$' Regex search.
 
+# Post Admin
+class CreatePost(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Post.objects.all()
+    serializer = PostSerializer
+
+
+class AdminPostDestail(generics.RetrieveAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Post.objects.all()
+    serializer = PostSerializer
+
+
+class EditPost(generics.UpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Post.objects.all()
+    serializer = PostSerializer
+
+
+class DeletePost(generics.RetrieveDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Post.objects.all()
+    serializer = PostSerializer

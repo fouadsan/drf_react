@@ -1,33 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
 import axios from '../axios'
 import { useGlobalContext } from '../context'
+import { useHistory } from 'react-router-dom'
 
 function Login() {
-    const {user, setUser, initialUserState, handleChange} =
-     useGlobalContext();
-
+    const { handleChange, handleSubmit, isLoading, error, setError } = useGlobalContext();
     const history = useHistory();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log(user);
-        try {
-            const response = await axios.post("token/", {
-            email: user.email,
-            password: user.password
-        });
-            localStorage.setItem("access_token", response.data.access)
-            localStorage.setItem("refresh_token", response.data.refresh)
-            axios.defaults.headers['Authorization'] = 
-                'JWT ' + localStorage.getItem('access_token');
-            setUser({...initialUserState, isLogin: true});
-            history.push("/");
-        } catch (error) { 
-            console.log("something went wrong");
-        }
-        
+    useEffect(() => {
+        setError({isError: false, msg: ""})
+    }, [])
+
+    if (isLoading) {
+        return (
+            <main className="page-100">
+                <div className="loading"></div>
+            </main>
+        )  
+    }
+
+    if (error.isError) {
+        return (
+            <main className="page-100">
+                <div className="section section-center">
+                    <h3 className="text-center">{error.msg}</h3>
+                </div>
+            </main>
+        )
     }
 
     return (
@@ -64,7 +64,10 @@ function Login() {
                          required
                         />
                     </div>
-                    <button className="btn" type="submit" onClick={handleSubmit}>
+                    <button className="btn" type="submit" onClick={async (e) => {
+                        await handleSubmit(e)
+                        history.push("/")
+                    }}>
                          Login
                     </button>
                 </form>
