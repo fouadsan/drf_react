@@ -7,6 +7,8 @@ import NavAuthBtns from './NavAuthBtns'
 import Create from './Create'
 import Edit from './Edit'
 import Delete from './Delete'
+import ShowModal from './ShowModal'
+import Modal from './Modal'
 
 export {
     Header,
@@ -17,5 +19,7 @@ export {
     NavAuthBtns,
     Create,
     Edit,
-    Delete
+    Delete,
+    ShowModal,
+    Modal
 }

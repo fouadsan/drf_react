@@ -11,9 +11,11 @@ function Home() {
     }, [fetchPosts, user])
 
     if (isLoading) {
-        <main className="page-100">
-            <div className="loading"></div>
-        </main>
+        return (
+            <main className="page-100">
+                <div className="loading"></div>
+            </main>
+        )
     }
 
     if (error.isError) {

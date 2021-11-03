@@ -129,6 +129,14 @@ p {
   h4 {
     line-height: 1;
   }
+  ::placeholder {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    letter-spacing: var(--spacing);
+    text-align: start;
+    padding: 0 1rem;
+  }
 }
 /*  global classes */
 
@@ -207,4 +215,26 @@ p {
 
 .selected {
   font-weight: bold;
+}
+
+/* New */
+form {
+  padding: 2rem;
+  box-shadow: var(--dark-shadow);
+}
+
+.form-title {
+  padding: 1rem;
+}
+
+.form-control {
+  padding: 1.5rem;
+}
+
+.form-input {
+  width: 300px;
+  padding: 0.5rem 0;
+  border: 2px solid var(--clr-primary-5);
+  border-radius: 10px;
+  background-color: rgba(255, 159, 159, 0.1);
 }

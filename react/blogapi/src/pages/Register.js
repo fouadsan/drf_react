@@ -32,7 +32,7 @@ function Register() {
     return (
         <main className="page-100">
             <Wrapper>
-                <form noValidate>
+                <form className="form" noValidate>
                     <div className="form-title title">
                         <h3>Sign up</h3>
                         <div className="underline"></div>
@@ -54,7 +54,7 @@ function Register() {
                         <label htmlFor="username">
                             <h4>Username: </h4>
                         </label>
-                        <input type="test"
+                        <input type="text"
                          className="form-input"
                          name="username"
                          autoComplete="username"
@@ -90,43 +90,10 @@ const Wrapper = styled.div`
     flex-direction: column;
     justify-content:center;
     align-items: center;
-    form {
-        width: 50%;
-        padding: 2rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-        align-items: center;
-        box-shadow: var(--dark-shadow);
-
-        .form-title {
-            padding: 1rem;
-        }
-
-        .form-control {
-            min-width: 100%;
-            padding: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            label {
-            
-            }
-
-            input {
-                padding: 0.5rem 0;
-                width: 60%;
-                border: 2px solid var(--clr-primary-5);
-                border-radius: 10px;
-                background-color: rgba(0, 0, 0, .1);
-            }
-        }
-
-        button {
-            margin-top: 1rem;
-            padding: 1rem 2rem;
-        }
+   
+    button {
+        margin-top: 1rem;
+        padding: 1rem 2rem;
     }
 `
 

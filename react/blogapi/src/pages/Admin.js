@@ -3,19 +3,40 @@ import styled from 'styled-components'
 import { useGlobalContext } from '../context'
 import { FaPen } from 'react-icons/fa';
 import { FaTrash } from 'react-icons/fa';
+import ShowModal from '../components/ShowModal';
 
 function Admin() {
-    const {isLoading, error, posts, fetchPosts, user} =
-     useGlobalContext();
+    const {isLoading, error, posts, fetchPosts,
+         user, setModalState} = useGlobalContext();
+    
+    const handleCreate = () => {
+        setModalState({
+            isModalOpen: true,
+            type: 'create'
+        })
+    }
+
+    const handleEdit = () => {
+        setModalState({
+            isModalOpen: true,
+            type: 'edit'
+        })
+    }
+
+    const handleDelete = () => {
+        
+    }
 
     useEffect(() => {
         fetchPosts();
     }, [fetchPosts, user])
 
     if (isLoading) {
-        <main className="page-100">
-            <div className="loading"></div>
-        </main>
+        return (
+             <main className="page-100">
+                <div className="loading"></div>
+            </main>
+        )
     }
 
     if (error.isError) {
@@ -28,36 +49,59 @@ function Admin() {
         )
     }
 
+    
+
     return (
         <main className="page-100">
             <Wrapper className="section">
-                    {posts.map((post) => {
-                        const {id, title, excerpt, slug, status} = post
-                        return (
-                            <ListView key={id}>
-                                <div className="info">
-                                    <p>{id}</p>
-                                    {
-                                        title.length <= 15 ?
-                                        <p>{title}</p> :
-                                        <h5>
-                                            {title.substr(0, 15)}...
-                                        </h5>
-                                    }
-                                    {
-                                        excerpt.length <= 30 ?
-                                        <p>{excerpt}</p> :
-                                        <p>{excerpt.substr(0, 30)}...</p>
-                                    }
-                                </div>
-                                
-                                <div className="action">
-                                    <button className="btn"><FaPen /></button>
-                                    <button className="btn"><FaTrash /></button>
-                                </div>
-                            </ListView>
-                        )
-                    })}
+                <div className="form-title title">
+                    <h3>admin</h3>
+                    <div className="underline"></div>
+                </div>
+                {posts.map((post) => {
+                    const {id, title, excerpt, slug, status} = post
+                    return (
+                        <ListView key={id}>
+                            <div className="info">
+                                <p>{id}</p>
+                                {
+                                    title.length <= 15 ?
+                                    <p>{title}</p> :
+                                    <h5>
+                                        {title.substr(0, 15)}...
+                                    </h5>
+                                }
+                                {
+                                    excerpt.length <= 30 ?
+                                    <p>{excerpt}</p> :
+                                    <p>{excerpt.substr(0, 30)}...</p>
+                                }
+                            </div>
+                            
+                            <div className="action">
+                                <button type="button" 
+                                    className="btn"
+                                    onClick={handleEdit}
+                                >
+                                    <FaPen />
+                                </button>
+                                <button type="button"
+                                    className="btn"
+                                    onClick={handleDelete}
+                                 >
+                                    <FaTrash />
+                                </button>
+                            </div>
+                        </ListView>
+                    )
+                })}
+                <div className="create">
+                    <button type="button" className="btn"
+                    onClick={handleCreate}>
+                        create
+                    </button>
+                </div>
+                <ShowModal />
             </Wrapper>
         </main>
     )
@@ -69,7 +113,16 @@ const Wrapper = styled.section`
     padding: 2rem;
     min-height: 500px;
     justify-content: space-evenly;
-    box-shadow: var(--dark-shadow);
+    box-shadow: var(--light-shadow);
+    .create {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        .btn {
+            padding: 0.5rem 1rem;;
+        }
+    }
 `
 
 const ListView = styled.div`

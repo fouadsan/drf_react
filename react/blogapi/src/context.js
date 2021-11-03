@@ -32,6 +32,10 @@ const AppProvider = ({ children }) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [user, setUser] = useState(initialUserState);
     const [singlePost, setSinglePost] = useState(null);
+    const [modalState, setModalState] = useState({
+        isModalOpen: true,
+        type: "create"
+    })
     
     const fetchPosts = useCallback(async () => {
         console.log("fetching...");
@@ -102,6 +106,33 @@ const AppProvider = ({ children }) => {
         
     }
 
+    const createPost = async ({...data}) => {
+        try {
+            const response = await axios.post('admin/create/')
+            setSinglePost(response.data);
+            setIsLoading(false);
+        } catch (error) {
+            setError({isError: true, msg: "an error occured while fetching data"})
+            setIsLoading(false);
+        }
+    }
+
+    const editPost = async (id) => {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
+
+    const deletePost = async (id) => {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
+
     return <AppContext.Provider value={{
         isLoading,
         setIsLoading,
@@ -116,7 +147,9 @@ const AppProvider = ({ children }) => {
         handleSubmit,
         initialUserState,
         singlePost,
-        fetchSinglePost
+        fetchSinglePost,
+        modalState,
+        setModalState
       }}>
         {children}
         </AppContext.Provider>
