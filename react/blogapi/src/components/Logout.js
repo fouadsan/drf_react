@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react'
 import axios from '../axios';
 import { useHistory } from 'react-router-dom';
+import { useGlobalContext } from '../context'
 
 function Logout() {
     const history = useHistory();
+	const {user, setUser} = useGlobalContext();
 
 	const singout = async () => {
 		try {
@@ -13,6 +15,7 @@ function Logout() {
 			localStorage.removeItem('access_token');
 			localStorage.removeItem('refresh_token');
 			axios.defaults.headers['Authorization'] = null;
+			setUser({...user, isLogin: false})
 			history.push('/login');
 			console.log("logged out");
 		} catch (error) {
@@ -22,7 +25,7 @@ function Logout() {
 
 	useEffect(() => {
 		singout();
-	});
+	}, [user]);
 	return <div>Logout</div>;
 }
 

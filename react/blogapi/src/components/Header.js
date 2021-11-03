@@ -13,7 +13,7 @@ function Header() {
                 <CustomLink to="/about" activeClassName="selected">
                     <span>ABOUT</span>
                 </CustomLink>
-                <Search />
+              
             </NavMenu>
             <CustomLink to="/register" activeClassName="selected">
                 <span>REGISTER</span>

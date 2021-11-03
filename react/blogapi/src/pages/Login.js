@@ -1,38 +1,28 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import axios from '../axios'
-
+import { useGlobalContext } from '../context'
 
 function Login() {
-    const initialFormData = Object.freeze({
-        email: "",
-        password: ""
-    });
-    const [formData, setFormData] = useState(initialFormData);
+    const {user, setUser, initialUserState, handleChange} =
+     useGlobalContext();
 
     const history = useHistory();
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            //Trimming any whitespace
-            [e.target.name]: e.target.value.trim(),
-        })
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
+        console.log(user);
         try {
             const response = await axios.post("token/", {
-            email: formData.email,
-            password: formData.password
+            email: user.email,
+            password: user.password
         });
             localStorage.setItem("access_token", response.data.access)
             localStorage.setItem("refresh_token", response.data.refresh)
             axios.defaults.headers['Authorization'] = 
                 'JWT ' + localStorage.getItem('access_token');
+            setUser({...initialUserState, isLogin: true});
             history.push("/");
         } catch (error) { 
             console.log("something went wrong");

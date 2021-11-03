@@ -4,7 +4,7 @@ import { useGlobalContext } from '../context'
 import { PostList } from '../components'
 
 function Home() {
-    const {isLoading, error, posts} = useGlobalContext();
+    const {isLoading, error} = useGlobalContext();
     
     if (isLoading) {
         return <div className="loading"></div>
@@ -24,7 +24,7 @@ function Home() {
         <main>
             <Wrapper className="page-100">
                 <div>
-                    <PostList posts={posts} />
+                    <PostList />
                 </div>  
             </Wrapper>
         </main>

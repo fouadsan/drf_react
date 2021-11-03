@@ -2,34 +2,24 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import axios from '../axios'
+import { useGlobalContext } from '../context'
 
 function Register() {
-    const initialFormData = Object.freeze({
-        email: "",
-        username: "",
-        password: ""
-    });
-    const [formData, setFormData] = useState(initialFormData);
+    const {user, setUser, initialUserState, handleChange} =
+     useGlobalContext();
 
     const history = useHistory();
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            //Trimming any whitespace
-            [e.target.name]: e.target.value.trim(),
-        })
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
+        console.log(user);
         try {
             const response = await axios.post("user/register/", {
-            email: formData.email,
-            user_name: formData.username,
-            password: formData.password
+            email: user.email,
+            user_name: user.username,
+            password: user.password
         });
+            setUser(initialUserState);
             history.push("/login");
             console.log(response.data);
             console.log("User has been created successfully, You can now login");
