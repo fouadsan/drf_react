@@ -42,22 +42,22 @@ class PostListDetailFilter(generics.ListAPIView):
 class CreatePost(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Post.objects.all()
-    serializer = PostSerializer
+    serializer_class = PostSerializer
 
 
 class AdminPostDestail(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Post.objects.all()
-    serializer = PostSerializer
+    serializer_class = PostSerializer
 
 
 class EditPost(generics.UpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Post.objects.all()
-    serializer = PostSerializer
+    serializer_class = PostSerializer
 
 
 class DeletePost(generics.RetrieveDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Post.objects.all()
-    serializer = PostSerializer
+    serializer_class = PostSerializer

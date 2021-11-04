@@ -4,19 +4,16 @@ import { Modal } from '.';
 
 function ShowModal() {
     const {modalState} = useGlobalContext();
-    if (modalState.isModalOpen) {
-        switch (modalState.type) {
-            case "create":
-                return <Modal />
-            case "edit":
-               return <Modal />
-            default:
-                return null
-        }
-    }  else {
-        return null
+    switch (modalState.type) {
+        case "create":
+            return <Modal type={"create"} />
+        case "edit":
+            return <Modal type={"edit"} />
+        default:
+            return null
     }
-}
+}  
+
 
 
 

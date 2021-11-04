@@ -5,8 +5,23 @@ import { useGlobalContext } from '../context'
 import { useHistory } from 'react-router-dom'
 
 function Login() {
-    const { handleChange, handleSubmit, isLoading, error, setError } = useGlobalContext();
+    const { submitAuth, isLoading, error, setError,
+        user, setUser } = useGlobalContext();
     const history = useHistory();
+
+    const handleChange = (e) => {
+        setUser({
+            ...user,
+            //Trimming any whitespace
+            [e.target.name]: e.target.value.trim(),
+        })
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        submitAuth()
+        history.push("/")
+    }
 
     useEffect(() => {
         setError({isError: false, msg: ""})
@@ -64,10 +79,7 @@ function Login() {
                          required
                         />
                     </div>
-                    <button className="btn" type="submit" onClick={async (e) => {
-                        await handleSubmit(e)
-                        history.push("/")
-                    }}>
+                    <button className="btn" type="submit" onClick={handleSubmit}>
                          Login
                     </button>
                 </form>

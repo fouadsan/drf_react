@@ -5,10 +5,18 @@ import axios from '../axios'
 import { useGlobalContext } from '../context'
 
 function Register() {
-    const {user, setUser, initialUserState, handleChange} =
+    const {user, setUser, initialUserState} =
      useGlobalContext();
 
     const history = useHistory();
+
+    const handleChange = (e) => {
+        setUser({
+            ...user,
+            //Trimming any whitespace
+            [e.target.name]: e.target.value.trim(),
+        })
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();

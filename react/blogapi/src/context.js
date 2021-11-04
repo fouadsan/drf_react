@@ -13,12 +13,20 @@ const getLocalStorage = () => {
   }
 
 const initialUserState =  Object.freeze({
+    id: null,
     email: "",
     username: "",
     password: "",
     isLogin: getLocalStorage(),
 });
 
+const initialFormData = ({
+    title: "",
+    category: 1,
+    slug: "",
+    excerpt: "",
+    content: "",
+});
 
 const AppContext = React.createContext()
 
@@ -33,9 +41,10 @@ const AppProvider = ({ children }) => {
     const [user, setUser] = useState(initialUserState);
     const [singlePost, setSinglePost] = useState(null);
     const [modalState, setModalState] = useState({
-        isModalOpen: true,
-        type: "create"
+        isModalOpen: false,
+        type: ""
     })
+    const [newData, setNewData] = useState(initialFormData);
     
     const fetchPosts = useCallback(async () => {
         console.log("fetching...");
@@ -62,16 +71,9 @@ const AppProvider = ({ children }) => {
         }
     }, [user]);
 
-    const handleChange = (e) => {
-        setUser({
-            ...user,
-            //Trimming any whitespace
-            [e.target.name]: e.target.value.trim(),
-        })
-    }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+
+    const submitAuth = async () => {
         setIsLoading(true);
         try {
             const response = await axios.post("token/", {
@@ -106,31 +108,48 @@ const AppProvider = ({ children }) => {
         
     }
 
-    const createPost = async ({...data}) => {
+    const createPost = async () => {
+        const data = {author: 1, ...newData}
         try {
-            const response = await axios.post('admin/create/')
-            setSinglePost(response.data);
+            const response = await axios.post('admin/create/', data)
+            setPosts([...posts, data])
+            setNewData(initialFormData)
+            setModalState({isModalOpen: false, type: ""})
             setIsLoading(false);
         } catch (error) {
-            setError({isError: true, msg: "an error occured while fetching data"})
+            setError({isError: true, msg: "an error occured while sending data"})
             setIsLoading(false);
         }
     }
 
-    const editPost = async (id) => {
+    const editPost = async () => {
+        const data = {author: 1, ...newData}
         try {
-            
+            await axios.put(`admin/edit/${data.id}/`, data)
+            setNewData(initialFormData)
+            setModalState({isModalOpen: false, type: ""})
+            console.log(data);
+            setIsLoading(false);
         } catch (error) {
-            
+            setError({isError: true, msg: "an error occured while sending data"})
+            setIsLoading(false);
         }
     }
 
     const deletePost = async (id) => {
+        setIsLoading(true);
         try {
-            
+            await axios.delete(`admin/delete/${id}/`)
+            const newPosts = posts.filter((item) => {
+                return item.id !== id
+            })
+            console.log(newPosts);
+            setPosts(newPosts);
+            setIsLoading(false);
         } catch (error) {
-            
+            setError({isError: true, msg: "an error occured while sending data"})
         }
+        setIsLoading(false);
     }
 
     return <AppContext.Provider value={{
@@ -143,13 +162,17 @@ const AppProvider = ({ children }) => {
         searchTerm,
         user,
         setUser,
-        handleChange,
-        handleSubmit,
+        submitAuth,
         initialUserState,
         singlePost,
         fetchSinglePost,
         modalState,
-        setModalState
+        setModalState,
+        newData,
+        setNewData,
+        editPost,
+        createPost,
+        deletePost
       }}>
         {children}
         </AppContext.Provider>
