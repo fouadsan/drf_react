@@ -5,6 +5,8 @@ import { useGlobalContext } from '../context'
 
 function PostList() {
     const {posts} = useGlobalContext();
+    const imageInput = document.getElementById('image')
+    console.log(imageInput);
     return (
         <Wrapper>
             {posts.map((post) => {
@@ -27,7 +29,9 @@ function PostList() {
                         }
                         <span className="text-center">{status}</span>
                     </PostCard>
-                )   
+                )
+                
+                   
             })}
         </Wrapper>
     )
@@ -64,7 +68,6 @@ const PostCard = styled.div`
         color: gray;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
-
     &:hover {
         transform: scale(1.04);
     }

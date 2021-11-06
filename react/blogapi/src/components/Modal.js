@@ -22,32 +22,32 @@ function Modal({type}) {
 			.replace(/-+$/, ''); // Trim - from end of text
 	}
 
-    const {newData ,setNewData, createPost, editPost} = useGlobalContext();
+    const {newData ,setNewData, createPost,
+         editPost, postImage, setPostImage} = useGlobalContext();
 
-
-    const handleChange = (e) => {
-        const name = e.target.name
-        const value = e.target.value
-        if ([name] == 'title') {
-            setNewData({
-                ...newData,
-                [name]: value,
-                ['slug']: slugify(value.trim())
-            })
-        } else if ([name] == 'category') {
-            setNewData({
-                ...newData,
-                ['category']: parseInt(value),
-            })
-        } else {
-            setNewData({
-                ...newData,
-                [name]: value,
-            })
-        }
-    }
+	const handleChange = (e) => {
+		if ([e.target.name] == 'image') {
+			setPostImage({
+				image: e.target.files,
+			});
+			console.log(e.target.files);
+		}
+		if ([e.target.name] == 'title') {
+			setNewData({
+				...newData,
+				[e.target.name]: e.target.value.trim(),
+				['slug']: slugify(e.target.value.trim()),
+			});
+		} else {
+			setNewData({
+				...newData,
+				[e.target.name]: e.target.value.trim(),
+			});
+		}
+	};
 
     const handleSubmit = (e) => {
+        console.log(postImage.image);
         e.preventDefault();
         type === "create" ? createPost() : editPost()
     }
@@ -70,16 +70,6 @@ function Modal({type}) {
                         onChange={handleChange}
                         required
                         />
-                    </div>
-                    <div className="form-control">
-                        <select className="form-input"
-                            name="category"
-                            value={newData.category}
-                            onChange={handleChange}
-                        >
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                        </select>
                     </div>
                     <div className="form-control">
                         <input type="text"
@@ -113,6 +103,16 @@ function Modal({type}) {
                             required
                         />
                     </div>
+                    <div className="form-control">
+                        <input type="file"
+                            className="form-input"
+                            name="image"
+                       
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
                     <div className="submit-btn">
                         <button 
                             type="submit"

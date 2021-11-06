@@ -31,7 +31,7 @@ function SinglePost() {
         )
     }
 
-    const {title, excerpt, content} = singlePost[0]
+    const {title, excerpt, content, image} = singlePost[0]
     return (
         <main className="page-100">
            <div className="form-title title">

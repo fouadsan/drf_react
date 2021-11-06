@@ -1,7 +1,7 @@
-
 import React, { useState, useContext } from 'react'
 import { useCallback } from 'react'
-import axios from './axios'
+import axiosInstance from './axios'
+import { useHistory } from 'react-router-dom'
 
 const getLocalStorage = () => {
     let access_token = localStorage.getItem('access_token');
@@ -13,12 +13,20 @@ const getLocalStorage = () => {
   }
 
 const initialUserState =  Object.freeze({
+    id: null,
     email: "",
     username: "",
     password: "",
     isLogin: getLocalStorage(),
 });
 
+const initialFormData = ({
+    title: "",
+    category: 1,
+    slug: "",
+    excerpt: "",
+    content: "",
+});
 
 const AppContext = React.createContext()
 
@@ -33,16 +41,20 @@ const AppProvider = ({ children }) => {
     const [user, setUser] = useState(initialUserState);
     const [singlePost, setSinglePost] = useState(null);
     const [modalState, setModalState] = useState({
-        isModalOpen: true,
-        type: "create"
+        isModalOpen: false,
+        type: ""
     })
+    const [newData, setNewData] = useState(initialFormData);
+    const [postImage, setPostImage] = useState(null);
     
+    const history = useHistory();
+
     const fetchPosts = useCallback(async () => {
         console.log("fetching...");
         setIsLoading(true);
         try {
             if (user.isLogin) {
-                const response = await axios.get()
+                const response = await axiosInstance.get()
                 const data = response.data
                 if (data.length > 0) {
                     setPosts(data);
@@ -62,25 +74,18 @@ const AppProvider = ({ children }) => {
         }
     }, [user]);
 
-    const handleChange = (e) => {
-        setUser({
-            ...user,
-            //Trimming any whitespace
-            [e.target.name]: e.target.value.trim(),
-        })
-    }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+
+    const submitAuth = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.post("token/", {
+            const response = await axiosInstance.post("token/", {
             email: user.email,
             password: user.password
         });
             localStorage.setItem("access_token", response.data.access)
             localStorage.setItem("refresh_token", response.data.refresh)
-            axios.defaults.headers['Authorization'] = 
+            axiosInstance.defaults.headers['Authorization'] = 
                 'JWT ' + localStorage.getItem('access_token');
             setUser({...initialUserState, isLogin: true});
             setError({isError: false, msg: ""});
@@ -94,7 +99,7 @@ const AppProvider = ({ children }) => {
     const fetchSinglePost = async (slug) => {
         setIsLoading(true)
         try {
-            const response = await axios.get(`posts/?slug=${slug}`)
+            const response = await axiosInstance.get(`posts/?slug=${slug}`)
             const data = response.data
             console.log(data);
             setSinglePost(response.data);
@@ -106,31 +111,57 @@ const AppProvider = ({ children }) => {
         
     }
 
-    const createPost = async ({...data}) => {
-        try {
-            const response = await axios.post('admin/create/')
-            setSinglePost(response.data);
+    const createPost = async () => {
+        let formData = new FormData();
+		formData.append('title', newData.title);
+		formData.append('slug', newData.slug);
+		formData.append('author', 1);
+		formData.append('excerpt', newData.excerpt);
+		formData.append('content', newData.content);
+		formData.append('image', postImage.image[0]);
+         try {
+            await axiosInstance.post(`admin/create/`, formData);
+            setPosts([...posts, formData])
+            setNewData(initialFormData)
+            setModalState({isModalOpen: false, type: ""})
             setIsLoading(false);
+            history.push({
+			pathname: '/admin/',
+		});
         } catch (error) {
-            setError({isError: true, msg: "an error occured while fetching data"})
+            setError({isError: true, msg: "an error occured while sending data"})
             setIsLoading(false);
         }
     }
 
-    const editPost = async (id) => {
+    const editPost = async () => {
+        const data = {author: 1, ...newData}
         try {
-            
+            await axiosInstance.put(`admin/edit/${data.id}/`, data)
+            setNewData(initialFormData)
+            setModalState({isModalOpen: false, type: ""})
+            console.log(data);
+            setIsLoading(false);
         } catch (error) {
-            
+            setError({isError: true, msg: "an error occured while sending data"})
+            setIsLoading(false);
         }
     }
 
     const deletePost = async (id) => {
+        setIsLoading(true);
         try {
-            
+            await axiosInstance.delete(`admin/delete/${id}/`)
+            const newPosts = posts.filter((item) => {
+                return item.id !== id
+            })
+            console.log(newPosts);
+            setPosts(newPosts);
+            setIsLoading(false);
         } catch (error) {
-            
+            setError({isError: true, msg: "an error occured while sending data"})
         }
+        setIsLoading(false);
     }
 
     return <AppContext.Provider value={{
@@ -143,13 +174,19 @@ const AppProvider = ({ children }) => {
         searchTerm,
         user,
         setUser,
-        handleChange,
-        handleSubmit,
+        submitAuth,
         initialUserState,
         singlePost,
         fetchSinglePost,
         modalState,
-        setModalState
+        setModalState,
+        newData,
+        setNewData,
+        editPost,
+        createPost,
+        deletePost,
+        postImage,
+        setPostImage
       }}>
         {children}
         </AppContext.Provider>

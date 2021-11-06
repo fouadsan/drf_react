@@ -5,8 +5,23 @@ import { useGlobalContext } from '../context'
 import { useHistory } from 'react-router-dom'
 
 function Login() {
-    const { handleChange, handleSubmit, isLoading, error, setError } = useGlobalContext();
+    const { submitAuth, isLoading, error, setError,
+        user, setUser } = useGlobalContext();
     const history = useHistory();
+
+    const handleChange = (e) => {
+        setUser({
+            ...user,
+            //Trimming any whitespace
+            [e.target.name]: e.target.value.trim(),
+        })
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        submitAuth()
+        history.push("/")
+    }
 
     useEffect(() => {
         setError({isError: false, msg: ""})
@@ -64,10 +79,7 @@ function Login() {
                          required
                         />
                     </div>
-                    <button className="btn" type="submit" onClick={async (e) => {
-                        await handleSubmit(e)
-                        history.push("/")
-                    }}>
+                    <button className="btn" type="submit" onClick={handleSubmit}>
                          Login
                     </button>
                 </form>
@@ -90,22 +102,18 @@ const Wrapper = styled.div`
         justify-content: space-evenly;
         align-items: center;
         box-shadow: var(--dark-shadow);
-
         .form-title {
             padding: 1rem;
         }
-
         .form-control {
             min-width: 100%;
             padding: 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-
             label {
             
             }
-
             input {
                 padding: 0.5rem 0;
                 width: 60%;
@@ -114,7 +122,6 @@ const Wrapper = styled.div`
                 background-color: rgba(0, 0, 0, .1);
             }
         }
-
         button {
             margin-top: 1rem;
             padding: 1rem 2rem;

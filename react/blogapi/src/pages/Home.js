@@ -40,7 +40,6 @@ function Home() {
 }
 
 const Wrapper = styled.div`
-
 `
 
 export default Home

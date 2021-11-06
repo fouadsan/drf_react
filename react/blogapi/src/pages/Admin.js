@@ -7,7 +7,8 @@ import ShowModal from '../components/ShowModal';
 
 function Admin() {
     const {isLoading, error, posts, fetchPosts,
-         user, setModalState} = useGlobalContext();
+         user, modalState, setModalState, setNewData, deletePost} = 
+         useGlobalContext();
     
     const handleCreate = () => {
         setModalState({
@@ -16,15 +17,18 @@ function Admin() {
         })
     }
 
-    const handleEdit = () => {
+    const handleEdit = (id) => {
+        const specificPost = posts.find((item) => item.id ===id)
+        console.log(specificPost);
+        setNewData(specificPost)
         setModalState({
             isModalOpen: true,
             type: 'edit'
         })
     }
 
-    const handleDelete = () => {
-        
+    const handleDelete = (id) => {
+        deletePost(id)
     }
 
     useEffect(() => {
@@ -58,12 +62,12 @@ function Admin() {
                     <h3>admin</h3>
                     <div className="underline"></div>
                 </div>
-                {posts.map((post) => {
-                    const {id, title, excerpt, slug, status} = post
+                {posts.map((post, index) => {
+                    const {title, excerpt, id} = post
                     return (
-                        <ListView key={id}>
+                        <ListView key={index}>
                             <div className="info">
-                                <p>{id}</p>
+                                <p>{index + 1}</p>
                                 {
                                     title.length <= 15 ?
                                     <p>{title}</p> :
@@ -81,13 +85,13 @@ function Admin() {
                             <div className="action">
                                 <button type="button" 
                                     className="btn"
-                                    onClick={handleEdit}
+                                    onClick={() => handleEdit(id)}
                                 >
                                     <FaPen />
                                 </button>
                                 <button type="button"
                                     className="btn"
-                                    onClick={handleDelete}
+                                    onClick={() => handleDelete(id)}
                                  >
                                     <FaTrash />
                                 </button>
@@ -101,7 +105,7 @@ function Admin() {
                         create
                     </button>
                 </div>
-                <ShowModal />
+                {modalState.isModalOpen && <ShowModal />}
             </Wrapper>
         </main>
     )
@@ -126,22 +130,20 @@ const Wrapper = styled.section`
 `
 
 const ListView = styled.div`
-    padding: 2rem;
+    padding: 1.5rem;
+    margin: 2rem 0;
     width: 100%;
     display: flex;
     box-shadow: var(--light-shadow);
-
     .info {
         display: flex;
         justify-content: space-around;
         align-items: center;
         flex: 1;
     }
-
     .action {
         padding: 1rem;
         display: flex;
-
         .btn {
             margin-left: 0.2rem;
         }

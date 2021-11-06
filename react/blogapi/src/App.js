@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { Header, Footer, Logout, Create, Edit, Delete } from './components'
+import { Header, Footer, Logout, Edit, Delete } from './components'
 import { Home, About, SinglePost, Login, Error,
    Register, Admin } from './pages';
 
@@ -30,11 +30,6 @@ function App() {
           <Route exact path="/admin">
             <Admin />
           </Route>
-          <Route exact path="/create">
-            <Create />
-          </Route>
-          <Route exact path="/edit/:id" children={<Edit />} />
-          <Route exact path="/delete/:id" children={<Delete />} />
           <Route path="*">
             <Error />
           </Route>
